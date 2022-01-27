@@ -8,6 +8,35 @@
 #include "GameFramework/GameStateBase.h"
 #include "SongQuizGameState.generated.h"
 
+UCLASS()
+class USongList : public UObject
+{
+	GENERATED_BODY()
+
+public:
+	struct FSong
+	{
+		FString Name;
+		FString Artist;
+		TOptional<FString> Show;
+		TArray<FString> AcceptableAnswers;
+	};
+
+	static USongList* New(UObject* Owner, const FString& CsvString);
+
+	const FSong& GetSong(int32 SongNumber) const;
+	int32 GetCurrentSongNumber() const;
+
+	TOptional<int32> NextSequential();
+	TOptional<int32> NextRandom();
+
+private:
+	int32 CurrentSongNumber = 0;
+	TArray<FSong> Songs;
+	TMap<int32, FSong*> PlayedSongs;
+	TMap<int32, FSong*> NotPlayedSongs;
+};
+
 /**
  * 
  */
