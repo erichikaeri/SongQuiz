@@ -9,27 +9,28 @@ ASongQuizGameState::ASongQuizGameState()
 	PlayerReadyTrackerComponent = CreateDefaultSubobject<UPlayerReadyTrackerComponent>(TEXT("PlayerReadyTrackerComponent"));
 }
 
-void ASongQuizGameState::MulticastOnSongListReceived_Implementation()
+void ASongQuizGameState::MulticastSetSongListCsv_Implementation(const FString& CsvString)
 {
-	OnSongListReceived.Broadcast({});
+	// TODO create song list
+	OnSongListCreated.Broadcast(nullptr);
 }
 
-void ASongQuizGameState::MulticastOnNextSongDecided_Implementation()
+void ASongQuizGameState::MulticastOnNextSongDecided_Implementation(int32 SongNumber, int32 StartSeconds)
 {
-	OnNextSongDecided.Broadcast({}, {});
+	OnNextSongDecided.Broadcast(SongNumber, StartSeconds);
 }
 
-void ASongQuizGameState::MulticastOnPlaySong_Implementation()
+void ASongQuizGameState::MulticastOnPlaySong_Implementation(int32 SongNumber)
 {
-	OnPlaySong.Broadcast({});
+	OnPlaySong.Broadcast(SongNumber);
 }
 
-void ASongQuizGameState::MulticastOnSongAnswered_Implementation()
+void ASongQuizGameState::MulticastOnSongAnswered_Implementation(int32 SongNumber, APlayerState* Answerer)
 {
-	OnSongAnswered.Broadcast({}, {});
+	OnSongAnswered.Broadcast(SongNumber, Answerer);
 }
 
-void ASongQuizGameState::MulticastOnSongSkipped_Implementation()
+void ASongQuizGameState::MulticastOnSongSkipped_Implementation(int32 SongNumber)
 {
-	OnSongSkipped.Broadcast({});
+	OnSongSkipped.Broadcast(SongNumber);
 }

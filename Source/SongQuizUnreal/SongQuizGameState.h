@@ -19,8 +19,8 @@ class SONGQUIZUNREAL_API ASongQuizGameState : public AGameStateBase
 public:
 	ASongQuizGameState();
 
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnSongListReceived, const FString&);
-	FOnSongListReceived OnSongListReceived;
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnSongListCreated, UObject*);
+	FOnSongListCreated OnSongListCreated;
 
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnNextSongDecided, int32, int32);
 	FOnNextSongDecided OnNextSongDecided;
@@ -40,21 +40,18 @@ public:
 	UPROPERTY()
 	UPlayerReadyTrackerComponent* PlayerReadyTrackerComponent;
 
-private:
-	friend class ASongQuizGameMode;
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastSetSongListCsv(const FString& CsvString);
 
 	UFUNCTION(NetMulticast, Reliable)
-	void MulticastOnSongListReceived();
+	void MulticastOnNextSongDecided(int32 SongNumber, int32 StartSeconds);
 
 	UFUNCTION(NetMulticast, Reliable)
-	void MulticastOnNextSongDecided();
+	void MulticastOnPlaySong(int32 SongNumber);
 
 	UFUNCTION(NetMulticast, Reliable)
-	void MulticastOnPlaySong();
+	void MulticastOnSongAnswered(int32 SongNumber, APlayerState* Answerer);
 
 	UFUNCTION(NetMulticast, Reliable)
-	void MulticastOnSongAnswered();
-
-	UFUNCTION(NetMulticast, Reliable)
-	void MulticastOnSongSkipped();
+	void MulticastOnSongSkipped(int32 SongNumber);
 };
