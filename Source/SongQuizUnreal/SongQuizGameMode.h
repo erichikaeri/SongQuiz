@@ -4,14 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "SongQuizUnrealGameModeBase.generated.h"
+#include "SongQuizGameMode.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SONGQUIZUNREAL_API ASongQuizUnrealGameModeBase : public AGameModeBase
+class SONGQUIZUNREAL_API ASongQuizGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	ASongQuizGameMode();
 };
