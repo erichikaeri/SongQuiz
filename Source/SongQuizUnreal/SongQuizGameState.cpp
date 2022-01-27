@@ -6,6 +6,7 @@
 ASongQuizGameState::ASongQuizGameState()
 {
 	ChatComponent = CreateDefaultSubobject<UChatComponent>(TEXT("ChatComponent"));
+	PlayerReadyTrackerComponent = CreateDefaultSubobject<UPlayerReadyTrackerComponent>(TEXT("PlayerReadyTrackerComponent"));
 }
 
 void ASongQuizGameState::MulticastOnSongListReceived_Implementation()

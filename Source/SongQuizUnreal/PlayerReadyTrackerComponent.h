@@ -13,16 +13,23 @@ class SONGQUIZUNREAL_API UPlayerReadyTrackerComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
-	UPlayerReadyTrackerComponent();
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerReady, APlayerState*);
+	FOnPlayerReady OnPlayerReady;
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
+	FSimpleMulticastDelegate OnAllPlayersReady;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	void SetPlayersToWaitFor(const TArray<APlayerController*>& PlayerList);
+	void SetReady(APlayerController* ReadyPlayer);
 
-		
+private:
+	UFUNCTION(Server, Reliable)
+	void ServerSetReady(APlayerController* ReadyPlayer);
+	
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastOnPlayerReady(APlayerState* ReadyPlayer);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void MulticastOnAllPlayersReady();
+
+	TMap<TWeakObjectPtr<APlayerController>, bool> Players;
 };

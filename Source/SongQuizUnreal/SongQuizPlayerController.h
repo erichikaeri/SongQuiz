@@ -26,4 +26,5 @@ private:
 	UChatComponent* ClientChatComponent;
 
 	void ClientOnChatReceived(APlayerState* From, const FString& Message);
+	void ClientOnPlayerReady(APlayerState* ReadyPlayer);
 };

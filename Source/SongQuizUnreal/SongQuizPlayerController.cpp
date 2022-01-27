@@ -3,6 +3,7 @@
 
 #include "SongQuizPlayerController.h"
 #include "SongQuizGameState.h"
+#include "PlayerReadyTrackerComponent.h"
 
 ASongQuizPlayerController::ASongQuizPlayerController()
 {
@@ -19,9 +20,15 @@ void ASongQuizPlayerController::BeginPlay()
 
 		ClientChatComponent = GameState->ChatComponent;
 		ClientChatComponent->OnChat.AddUObject(this, &ThisClass::ClientOnChatReceived);
+
+		GameState->PlayerReadyTrackerComponent->OnPlayerReady.AddUObject(this, &ThisClass::ClientOnPlayerReady);
 	}
 }
 
 void ASongQuizPlayerController::ClientOnChatReceived(APlayerState* From, const FString& Message)
+{
+}
+
+void ASongQuizPlayerController::ClientOnPlayerReady(APlayerState* ReadyPlayer)
 {
 }

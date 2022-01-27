@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ChatComponent.h"
+#include "PlayerReadyTrackerComponent.h"
 #include "GameFramework/GameStateBase.h"
 #include "SongQuizGameState.generated.h"
 
@@ -35,6 +36,9 @@ public:
 
 	UPROPERTY()
 	UChatComponent* ChatComponent;
+
+	UPROPERTY()
+	UPlayerReadyTrackerComponent* PlayerReadyTrackerComponent;
 
 private:
 	friend class ASongQuizGameMode;

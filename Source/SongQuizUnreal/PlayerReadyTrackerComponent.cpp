@@ -3,32 +3,53 @@
 
 #include "PlayerReadyTrackerComponent.h"
 
-// Sets default values for this component's properties
-UPlayerReadyTrackerComponent::UPlayerReadyTrackerComponent()
+void UPlayerReadyTrackerComponent::SetPlayersToWaitFor(const TArray<APlayerController*>& PlayerList)
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	check(GetNetMode() != NM_Client);
 
-	// ...
+	Players.Empty();
+	for (APlayerController* Each : PlayerList)
+	{
+		Players.FindOrAdd(Each) = false;
+	}
 }
 
-
-// Called when the game starts
-void UPlayerReadyTrackerComponent::BeginPlay()
+void UPlayerReadyTrackerComponent::SetReady(APlayerController* ReadyPlayer)
 {
-	Super::BeginPlay();
+	ServerSetReady(ReadyPlayer);
+}
 
-	// ...
+void UPlayerReadyTrackerComponent::ServerSetReady_Implementation(APlayerController* ReadyPlayer)
+{
+	check(Players.Contains(ReadyPlayer));
+
+	Players[TWeakObjectPtr<APlayerController>{ ReadyPlayer }] = true;
 	
+	bool AllPlayersReady = true;
+	for (const auto& EachPair : Players)
+	{
+		if (EachPair.Key.IsValid() && EachPair.Value == false)
+		{
+			AllPlayersReady = false;
+			break;
+		}
+	}
+
+	MulticastOnPlayerReady(ReadyPlayer->PlayerState);
+
+	if (AllPlayersReady)
+	{
+		MulticastOnAllPlayersReady();
+		Players.Empty();
+	}
 }
 
-
-// Called every frame
-void UPlayerReadyTrackerComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UPlayerReadyTrackerComponent::MulticastOnPlayerReady_Implementation(APlayerState* ReadyPlayer)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
+	OnPlayerReady.Broadcast(ReadyPlayer);
 }
 
+void UPlayerReadyTrackerComponent::MulticastOnAllPlayersReady_Implementation()
+{
+	OnAllPlayersReady.Broadcast();
+}
